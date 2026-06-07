@@ -1,0 +1,51 @@
+simulation:
+  random_seed: 42
+  num_monte_carlo: 30
+  sim_time: 500
+  warmup_time: 50
+  arrival_rate: 20.0
+
+network:
+  num_edge_nodes: 3
+  edge_capacities: [8.0, 6.5, 10.2]
+  edge_processing_rates: [12.0, 9.5, 14.0]
+  edge_failure_prob: 0.01
+  edge_recovery_time: 10.0
+  bandwidth_range: [5000000.0, 20000000.0]
+  latency_range: [0.01, 0.05]
+  packet_loss_prob: 0.005
+
+queue:
+  model: "M/M/1"
+  buffer_size: 100
+
+game:
+  alpha: 0.35
+  beta: 0.40
+  gamma: 0.15
+  lambda_energy: 0.10
+  max_iterations: 50
+  convergence_threshold: 0.01
+
+dataset:
+  path: "Edge-IIoTset dataset/Selected dataset for ML and DL/DNN-EdgeIIoT-dataset.csv"
+  max_tasks: 2000
+  sampling_strategy: "balanced"
+
+evaluation:
+  confidence_level: 0.95
+  baseline_methods:
+    - "cloud_only"
+    - "greedy"
+    - "round_robin"
+    - "static_priority"
+    - "knapsack"
+    - "dqn"
+    - "ppo"
+    - "multi_agent_rl"
+
+output:
+  save_figures: true
+  save_tables: true
+  figure_format: "pdf"
+  dpi: 300
