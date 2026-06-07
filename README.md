@@ -1,131 +1,200 @@
-# Game-Theoretic Congestion-Aware Task Offloading for Edge-Enabled IIoT Networks
+# Game-Theoretic Congestion-Aware Task Offloading for Edge-Enabled Industrial IoT Networks
 
-> **Paper:** "Game-Theoretic Congestion-Aware Task Offloading for Edge-Enabled Industrial IoT Networks"  
-> **Authors:** Taha Ezatpour, Arash Anoushiravani, Mohammad Reza Hosseinnejad, Dr. Ali Bozorgmehr  
-> **Affiliation:** Islamic Revolution Comprehensive University, Iran
+This repository contains the complete implementation, experimental results, and supplementary materials for the paper:
+
+**"Game-Theoretic Congestion-Aware Task Offloading for Edge-Enabled Industrial IoT Networks"**
+
+The proposed framework formulates task offloading in Industrial Internet of Things (IIoT) environments as an exact potential congestion game, enabling decentralized task allocation with provable Nash equilibrium convergence, low latency, and high fairness without requiring reinforcement learning training.
 
 ---
 
-## Overview
+## Abstract
 
-This repository provides the complete simulation code for the paper. We model IIoT task offloading as a **non-cooperative congestion game** and prove:
+Industrial Internet of Things (IIoT) applications generate large volumes of latency-sensitive tasks that must be processed efficiently at edge nodes. Traditional heuristic and reinforcement learning approaches often suffer from congestion unawareness, training overhead, or lack of theoretical guarantees.
 
-- Existence of a **pure-strategy Nash Equilibrium** via an exact potential function (Proposition 2)
-- **Finite-step convergence** of best-response dynamics (Theorem 1)
+This work proposes a game-theoretic congestion-aware task offloading framework that:
 
-The proposed algorithm is compared against five baselines on a synthetic dataset mirroring CICIDS2017 statistics.
+- Models task offloading as a non-cooperative congestion game.
+- Provides an exact potential function formulation.
+- Guarantees pure-strategy Nash equilibrium existence.
+- Ensures finite-step convergence of best-response dynamics.
+- Achieves low computational complexity.
+- Outperforms heuristic and deep reinforcement learning baselines.
+
+Experimental evaluation is conducted on the Edge-IIoTset benchmark using extensive Monte Carlo simulations.
 
 ---
 
 ## Repository Structure
 
-```
-iiot-game-offloading/
+```text
+.
+├── figures/                    # Generated figures used in the paper
+├── results/                    # Simulation outputs and experimental results
+├── tables/                     # Tables reported in the manuscript
 │
-├── simulation.py          ← Main entry point (run this)
+├── main.py                     # Main execution script
+├── config.yaml                 # Experiment configuration
 │
-├── figures/
-│   ├── fig_comparison.pdf   ← Figure 1: 6-panel comparison
-│   ├── fig_convergence.pdf  ← Figure 2: Nash equilibrium convergence
-│   └── fig_sensitivity.pdf  ← Figure 3: Sensitivity to α, β, γ
+├── dataset_loader.py           # Edge-IIoTset dataset processing
+├── network_model.py            # Network and communication model
+├── queue_model.py              # Queueing and delay model
+├── game_model.py               # Exact potential game formulation
+├── offloading_algorithm.py     # Nash equilibrium offloading algorithm
 │
-└── results/
-    └── sensitivity_analysis.csv
+├── baselines.py                # Baseline methods (Cloud, RR, Greedy, RL)
+├── evaluation.py              # Performance evaluation
+├── statistical_analysis.py    # Confidence intervals and significance tests
+├── robustness.py              # Robustness experiments
+├── ablation.py                # Ablation studies
+├── visualization.py           # Plot generation
+│
+├── requirements.txt           # Python dependencies
+├── README.md
+└── .gitignore
 ```
 
 ---
 
-## Requirements
+## Methodology
 
-```bash
-pip install numpy scipy pandas matplotlib seaborn simpy
-```
+The proposed framework consists of:
 
-Python ≥ 3.9 recommended.
+### 1. Delay Modeling
+
+Total delay is decomposed into:
+
+- Transmission delay
+- Processing delay
+- Congestion delay
+
+allowing congestion effects to be explicitly incorporated into task utilities.
+
+### 2. Exact Potential Game
+
+Task offloading decisions are modeled as player actions within an exact potential game.
+
+The framework provides:
+
+- Potential function existence
+- Nash equilibrium existence
+- Finite convergence guarantees
+
+### 3. Congestion-Aware Offloading
+
+Tasks iteratively update their selected edge node through best-response dynamics until equilibrium is reached.
 
 ---
 
-## Reproducing All Results
+## Installation
+
+Clone the repository:
 
 ```bash
-git clone https://github.com/<your-username>/iiot-game-offloading.git
-cd iiot-game-offloading
+git clone https://github.com/tezatpour-arch/Game-Theoretic-Congestion-Aware-Task-Offloading-for-Edge-Enabled-Industrial-IoT-Networks.git
+
+cd Game-Theoretic-Congestion-Aware-Task-Offloading-for-Edge-Enabled-Industrial-IoT-Networks
+```
+
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
-python simulation.py
 ```
 
-This runs:
-1. Synthetic CICIDS2017-like dataset generation (5 000 tasks)
-2. Monte Carlo comparison (30 runs × 6 policies)
-3. All figures saved to `figures/`
-4. Sensitivity analysis over α, β, γ
+---
 
-Expected runtime: ~5 minutes on a standard laptop.
+## Running Experiments
+
+Run the complete evaluation:
+
+```bash
+python main.py
+```
+
+Generate figures:
+
+```bash
+python visualization.py
+```
+
+Run robustness analysis:
+
+```bash
+python robustness.py
+```
+
+Run ablation studies:
+
+```bash
+python ablation.py
+```
+
+Perform statistical analysis:
+
+```bash
+python statistical_analysis.py
+```
 
 ---
 
-## Key Results (Small Scale: 3 nodes, 5 000 tasks)
+## Experimental Results
 
-| Policy | Avg Delay (s) | Deadline % | Jain Fairness |
-|---|---|---|---|
-| Cloud-Only | 170.53 | 3.4 | 0.000 |
-| Static Priority | 170.53 | 3.4 | 0.000 |
-| Greedy | 18.54 | 91.7 | 1.000 |
-| Fuzzy Adaptive | 17.02 | 91.6 | 1.000 |
-| Knapsack | 16.88 | 91.6 | 1.000 |
-| **Game-Theoretic (Ours)** | **4.63** | **100.0** | **1.000** |
+The proposed method achieved:
 
----
+| Metric | Value |
+|----------|----------|
+| Average Delay | 0.413 s |
+| Deadline Satisfaction | 94.2% |
+| Jain Fairness Index | 0.946 |
+| Throughput | 5.85 Mbps |
+| Average Convergence Iterations | 2.97 |
 
-## Game-Theoretic Model
+Compared with the strongest reinforcement learning baseline (MARL), the proposed framework provides:
 
-The utility function (Eq. 6 in paper):
-
-$$U_i(s_i, \mathbf{s}_{-i}) = \alpha P_i - \beta \hat{C}_{s_i}(\mathbf{s}) - \gamma D_{i,s_i}$$
-
-The exact potential function (Eq. 8):
-
-$$\Phi(\mathbf{s}) = \sum_{i} \alpha P_i \;-\; \beta \sum_j \sum_{k=1}^{n_j(\mathbf{s})} \frac{k}{K_j} \;-\; \gamma \sum_i D_{i,s_i}$$
-
-Default weights: **α = 0.4, β = 0.3, γ = 0.3**
-
----
-
-## Sensitivity Analysis
-
-The file `figures/fig_sensitivity.pdf` shows how average delay, deadline satisfaction, and convergence speed respond to changes in α, β, γ — addressing Reviewer concern about parameter sensitivity (Proposition 1).
+- Lower latency
+- Higher deadline satisfaction
+- Better fairness
+- No training overhead
+- Provable convergence guarantees
 
 ---
 
 ## Dataset
 
-We use a **synthetic dataset** that mirrors CICIDS2017 statistical properties:
+Experiments are based on:
 
-| Attack Type | Share | Priority Range | Critical |
-|---|---|---|---|
-| Normal | 65% | U(0.1, 0.5) | No |
-| DDoS | 12% | U(0.7, 1.0) | **Yes** |
-| DoS Hulk | 8% | U(0.6, 0.9) | **Yes** |
-| DoS GoldenEye | 5% | U(0.6, 0.9) | **Yes** |
-| PortScan | 6% | U(0.3, 0.6) | No |
-| BruteForce | 4% | U(0.2, 0.5) | No |
+**Edge-IIoTset**
 
-Arrival process: Poisson(λ = 30 tasks/s) over 300 s window.
+Ferrag et al., IEEE Access, 2022.
 
-To use the **real CICIDS2017 dataset**, download from [https://www.unb.ca/cic/datasets/ids-2017.html](https://www.unb.ca/cic/datasets/ids-2017.html) and replace `generate_dataset()` with your loader.
+The dataset contains realistic Industrial IoT traffic and cyber-attack scenarios suitable for evaluating edge computing systems.
+
+---
+
+## Reproducibility
+
+The repository includes:
+
+- Source code
+- Configuration files
+- Experimental outputs
+- Statistical evaluation scripts
+- Figure generation scripts
+
+allowing complete reproduction of all reported results.
 
 ---
 
 ## Citation
 
+If you use this repository, please cite:
+
 ```bibtex
-@article{ezatpour2025game,
-  title   = {Game-Theoretic Congestion-Aware Task Offloading
-             for Edge-Enabled Industrial IoT Networks},
-  author  = {Ezatpour, Taha and Anoushiravani, Arash and
-             Hosseinnejad, Mohammad Reza and Bozorgmehr, Ali},
-  journal = {[Journal Name]},
-  year    = {2025}
+@article{tezatpour2025game,
+  title={Game-Theoretic Congestion-Aware Task Offloading for Edge-Enabled Industrial IoT Networks},
+  author={Tezatpour, Mohammad},
+  year={2025}
 }
 ```
 
@@ -133,4 +202,16 @@ To use the **real CICIDS2017 dataset**, download from [https://www.unb.ca/cic/da
 
 ## License
 
-MIT License — see `LICENSE` for details.
+This project is released for academic and research purposes.
+
+---
+
+## Contact
+
+Mohammad Tezatpour
+
+GitHub:
+https://github.com/tezatpour-arch
+
+Repository:
+https://github.com/tezatpour-arch/Game-Theoretic-Congestion-Aware-Task-Offloading-for-Edge-Enabled-Industrial-IoT-Networks
